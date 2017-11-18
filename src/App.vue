@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <v-header></v-header>
+    <v-header :seller="seller"></v-header>
     <div class="nav">
       <div class="item">
         <router-link to="/goods">商品</router-link>
@@ -12,7 +12,7 @@
         <router-link to="/seller">商家</router-link>
       </div>
     </div>
-    <router-view></router-view>
+    <router-view :seller="seller"></router-view>
   </div>
 </template>
 
@@ -23,8 +23,15 @@ export default {
   components: {
     'v-header': header
   },
+    created() {
+        this.$http.get('/api/seller').then(res => {
+            res = res.body
+            this.seller = res.data
+        })
+    },
   data() {
     return {
+        seller: {}
     }
   }
 }
