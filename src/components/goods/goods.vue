@@ -21,29 +21,34 @@
                                 <p class="desc">{{ food.description }}</p>
                                 <p class="sellCount"><span>月售{{ food.sellCount }}份</span> <span>好评率{{ food.rating
                                     }}%</span></p>
-                                <p class="price"><span class="nowPrice">￥{{ food.price }}</span><span class="oldPrice"
-                                                                                                      v-show="food.oldPrice">￥{{ food.oldPrice
+                                <p class="price">
+                                    <span class="nowPrice">￥{{ food.price }}</span><span class="oldPrice"
+                                                                                         v-show="food.oldPrice">￥{{ food.oldPrice
                                     }}</span></p>
+                                <div class="cartcontrol-wrapper">
+                                    <cartcontrol :food="food" @cartAddEvent="cartAdd"></cartcontrol>
+                                </div>
                             </div>
                         </li>
                     </ul>
                 </li>
             </ul>
         </div>
-        <shopcart :deliveryPrice="seller.deliveryPrice" :minPrice="seller.minPrice"></shopcart>
+        <shopcart ref="shopcart" :selectFoods="selectFoods" :deliveryPrice="seller.deliveryPrice" :minPrice="seller.minPrice"></shopcart>
     </div>
 </template>
 
 <script>
     import BScroll from 'better-scroll'
     import shopcart from '../shopcart/shopcart'
+    import cartcontrol from '../cartcontrol/cartcontrol'
 
 
     export default {
         props: {
-          seller: {
-              type: Object
-          }
+            seller: {
+                type: Object
+            }
         },
         data() {
             return {
@@ -60,13 +65,33 @@
         methods: {
             initBScroll() {
                 this.$nextTick(() => {
-                    this.menuscroll = new BScroll('.menu-wrapper')
-                    this.goodsscroll = new BScroll('.goods-wrapper')
+                    this.menuscroll = new BScroll('.menu-wrapper',{
+                        click: true
+                    })
+                    this.goodsscroll = new BScroll('.goods-wrapper',{
+                        click: true
+                    })
                 })
+            },
+            cartAdd(target) {
+                this.$refs.shopcart.drop(target)
             }
         },
+        computed: {
+           selectFoods() {
+               let foods = []
+               this.goods.forEach(good => {
+                   good.foods.forEach(food => {
+                       if(food.count) {
+                           foods.push(food)
+                       }
+                   })
+               })
+               return foods
+           }
+        },
         components: {
-            shopcart
+            shopcart,cartcontrol
         }
     }
 </script>
@@ -125,6 +150,7 @@
                         }
                         .content {
                             flex: 1;
+                            position: relative;
                             .name {
                                 font-size: 14px;
                                 line-height: 14px;
@@ -156,6 +182,11 @@
                                     line-height: 14px;
                                     font-weight: 700;
                                 }
+                            }
+                            .cartcontrol-wrapper {
+                                position: absolute;
+                                right: 0;
+                                bottom: -12px;
                             }
                         }
                     }
