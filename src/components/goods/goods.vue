@@ -35,6 +35,7 @@
             </ul>
         </div>
         <shopcart ref="shopcart" :selectFoods="selectFoods" :deliveryPrice="seller.deliveryPrice" :minPrice="seller.minPrice"></shopcart>
+        <food :selfood="selfood" ref="fd"></food>
     </div>
 </template>
 
@@ -42,8 +43,7 @@
     import BScroll from 'better-scroll'
     import shopcart from '../shopcart/shopcart'
     import cartcontrol from '../cartcontrol/cartcontrol'
-
-
+    import food from '../food/food'
     export default {
         props: {
             seller: {
@@ -52,7 +52,8 @@
         },
         data() {
             return {
-                goods: []
+                goods: [],
+                selfood: Object
             }
         },
         created() {
@@ -77,7 +78,8 @@
                 this.$refs.shopcart.drop(target)
             },
             gotoFood(food) {
-                
+                this.selfood = food
+                this.$refs.fd.show()
             }
         },
         computed: {
@@ -94,7 +96,7 @@
            }
         },
         components: {
-            shopcart,cartcontrol
+            shopcart,cartcontrol,food
         }
     }
 </script>
