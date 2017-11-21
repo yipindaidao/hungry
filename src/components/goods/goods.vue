@@ -12,7 +12,7 @@
                 <li v-for="item in goods" class="good-item">
                     <h1 class="title">{{ item.name }}</h1>
                     <ul class="foods">
-                        <li v-for="food in item.foods" class="food-item">
+                        <li v-for="food in item.foods" class="food-item" @click="gotoFood(food)">
                             <div class="icon">
                                 <img width="57" height="57" :src="food.icon"/>
                             </div>
@@ -75,6 +75,9 @@
             },
             cartAdd(target) {
                 this.$refs.shopcart.drop(target)
+            },
+            gotoFood(food) {
+                
             }
         },
         computed: {
