@@ -35,7 +35,7 @@
                   <div class="name">{{ food.name }}</div>
                   <div class="price">￥{{ food.price * food.count }}</div>
                   <div class="cartcontrol-wrapper">
-                    <cartcontrol :food="food" @cartAddEvent="cartAdd"></cartcontrol>
+                    <cartcontrol :selectfood="food" @cartAddEvent="cartAdd"></cartcontrol>
                   </div>
 
                 </li>

@@ -26,7 +26,7 @@
                                                                                          v-show="food.oldPrice">￥{{ food.oldPrice
                                     }}</span></p>
                                 <div class="cartcontrol-wrapper">
-                                    <cartcontrol :food="food" @cartAddEvent="cartAdd"></cartcontrol>
+                                    <cartcontrol :selectfood="food" @cartAddEvent="cartAdd"></cartcontrol>
                                 </div>
                             </div>
                         </li>
@@ -35,7 +35,7 @@
             </ul>
         </div>
         <shopcart ref="shopcart" :selectFoods="selectFoods" :deliveryPrice="seller.deliveryPrice" :minPrice="seller.minPrice"></shopcart>
-        <food :selfood="selfood" ref="fd"></food>
+        <food :selfood="selectedfood" ref="fd"></food>
     </div>
 </template>
 
@@ -53,7 +53,7 @@
         data() {
             return {
                 goods: [],
-                selfood: Object
+                selectedfood: {}
             }
         },
         created() {
@@ -78,7 +78,7 @@
                 this.$refs.shopcart.drop(target)
             },
             gotoFood(food) {
-                this.selfood = food
+                this.selectedfood = food
                 this.$refs.fd.show()
             }
         },
