@@ -31,7 +31,23 @@
                 <split v-show="selfood.description"></split>
                 <div class="rating">
                     <h1 class="title">商品评价</h1>
-                    <selrating :ratingType="ratingType" :onlyContent="onlyContent" :selRatingType="selRatingType"></selrating>
+                    <selrating :ratingType="ratingType"  @select-type="selectType" @only-type="onlyType" :ratings="selfood.ratings"></selrating>
+                    <div class="rating-wrapper">
+                        <ul v-show="selfood.ratings && selfood.ratings.length">
+                            <li v-for="rating in selfood.ratings" class="rating-item" v-show="ratingShow(rating.rateType,rating.text)">
+                                <div class="time">{{ rating.rateTime | fmtDate }}</div>
+                                <div class="content">
+                                    <span class="support-hook" :class="{'icon-thumb_up': rating.rateType === 0,'icon-thumb_down': rating.rateType === 1,'active': rating.rateType === 0}"></span>
+                                    <span class="name">{{ rating.text }}</span>
+                                </div>
+                                <div class="user">
+                                    <span class="name">{{ rating.username }}</span>
+                                    <img :src="rating.avatar" width="12" height="12"/>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="no-rating" v-show="!selfood.ratings || !selfood.ratings.length">暂无评价</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -43,10 +59,11 @@
     import split from '../split/split'
     import BScroll from 'better-scroll'
     import selrating from '../selrating/selrating'
+    import {formatDate} from '../../common/js/date'
 
-    const ALL = 0
-    const POSITIVE = 1
-    const NEGTIVE = 2
+    const ALL = 2
+    const POSITIVE = 0
+    const NEGTIVE = 1
 
     export default {
         props: {
@@ -87,6 +104,35 @@
                     }
 
                 })
+            },
+            selectType(tp) {
+                this.selRatingType = tp
+                this.$nextTick(() => {
+                    this.fs.refresh()
+                })
+            },
+            onlyType(ot) {
+                this.onlyContent = ot
+                this.$nextTick(() => {
+                    this.fs.refresh()
+                })
+            },
+            ratingShow(rateType,text) {
+                if(this.onlyContent && !text) {
+                    return false
+                }
+                if(this.selRatingType === ALL) {
+                    return true
+                }
+                else {
+                    return rateType === this.selRatingType
+                }
+            }
+        },
+        filters: {
+            fmtDate(time) {
+                var date = new Date(time);
+                return formatDate(date, 'yyyy-MM-dd hh:mm');
             }
         },
         components: {
@@ -129,6 +175,7 @@
                     height: 16px;
                     color: #fff;
                     display: inline-block;
+                    padding: 5px;
                 }
             }
             .basic {
@@ -205,12 +252,65 @@
                 }
             }
             .rating {
-                padding: 18px 18px 12px;
                 .title {
+                    padding: 18px 18px 0;
                     font-size: 14px;
                     color: rgb(7,17,27);
                     line-height: 14px;
                     margin-bottom: 18px;
+                }
+                .rating-wrapper {
+                    padding: 0 18px;
+                    .rating-item {
+                        padding: 16px 0;
+                        position: relative;
+                        border-bottom: 1px solid rgba(7,17,27,0.1);
+                        .time {
+                            font-size: 10px;
+                            line-height: 12px;
+                            color: rgb(147,153,159);
+                            margin-bottom: 6px;
+                        }
+                        .content {
+                            .support-hook {
+                                font-size: 12px;
+                                line-height: 24px;
+                                color: rgb(147,153,159);
+                                display: inline-block;
+                                vertical-align: middle;
+                                &.active {
+                                    color: rgb(0,160,220);
+                                }
+                            }
+                            .name {
+                                display: inline-block;
+                                vertical-align: middle;
+                                font-size: 12px;
+                                line-height: 16px;
+                                color: rgb(7,17,27);
+                            }
+                        }
+                        .user {
+                            position: absolute;
+                            right: 0;
+                            top: 12px;
+                            .name {
+                                display: inline-block;
+                                vertical-align: middle;
+                                font-size: 10px;
+                                line-height: 12px;
+                                color: rgb(147,153,159);
+                            }
+                            img {
+                                vertical-align: middle;
+                            }
+                        }
+                    }
+                    .no-rating {
+                        padding: 16px 0;
+                        font-size: 12px;
+                        color: rgb(147,153,159);
+                    }
                 }
             }
         }
