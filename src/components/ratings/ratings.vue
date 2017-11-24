@@ -35,7 +35,7 @@
                     </div>
                     <div class="item-right">
                         <div class="name">{{ rating.username }}</div>
-                        <el-rate class="rate-hook" v-model="4.4" disabled></el-rate>
+                        <el-rate class="rate-hook" v-model="rating.score" disabled></el-rate>
                         <div class="content" v-show="rating.text">{{ rating.text }}</div>
                         <div class="recomend">
                             <span class="support-hook" :class="{'icon-thumb_up': rating.rateType === 0,'icon-thumb_down': rating.rateType === 1,'active': rating.rateType === 0}"></span>
@@ -139,7 +139,7 @@
         position: absolute;
         left: 0;
         top: 174px;
-        bottom: 46px;
+        bottom: 0;
         width: 100%;
         overflow: hidden;
         .ratings-content {
