@@ -9,7 +9,10 @@
                         <span class="rating-count">({{ seller.ratingCount }})</span>
                         <span class="sell-count">月售{{ seller.sellCount }}单</span>
                     </div>
-                    <div class="collect"></div>
+                    <div class="collect" @click="toggleFavorite">
+                        <span class="icon-favorite" :class="{active: favorite}"></span>
+                        <div class="desc">{{ favotriteText }}</div>
+                    </div>
                 </div>
                 <div class="overview-bottom">
                     <ul class="desc">
@@ -73,7 +76,8 @@
         },
         data() {
             return {
-                supportIcon: ["decrease", "discount", "special", "invoice", "guarantee"]
+                supportIcon: ["decrease", "discount", "special", "invoice", "guarantee"],
+                favorite: false
             }
         },
         mounted() {
@@ -81,6 +85,11 @@
                 this.initSellerScroll()
                 this.initPicsScroll()
             })
+        },
+        computed: {
+           favotriteText() {
+               return this.favorite ? '已收藏' : '收藏'
+           }
         },
         methods: {
             initSellerScroll() {
@@ -92,6 +101,9 @@
                 else {
                     this.fs.refresh()
                 }
+            },
+            toggleFavorite() {
+               this.favorite = !this.favorite
             },
             initPicsScroll() {
                 if(this.seller.pics) {
@@ -162,6 +174,27 @@
                             font-size: 10px;
                             line-height: 18px;
                             color: rgb(77,85,93);
+                        }
+                    }
+                    .collect {
+                        position: absolute;
+                        right: 0;
+                        top: 18px;
+                        text-align: center;
+                        width: 45px;
+                        .icon-favorite {
+                            font-size: 24px;
+                            line-height: 24px;
+                            color: rgb(147,153,159);
+                            &.active {
+                                color: rgb(240,20,20);
+                            }
+                        }
+                        .desc {
+                            margin-top: 4px;
+                            color: rgb(77,85,93);
+                            font-size: 10px;
+                            line-height: 10px;
                         }
                     }
                 }
